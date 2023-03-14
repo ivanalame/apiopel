@@ -30,13 +30,15 @@ $app->get('/modelos', function ($request, $response, $args) use ($conn){
 
 });
 //get	/modelo/{idmodelo}/acabados	
-$app->get('/modelos', function ($request, $response, $args) use ($conn){
-    $ordenSql = "select * from modelo order by nombre";
+$app->get('/modelo/{idmodelo}/acabados', function ($request, $response, $args) use ($conn){
+    $ordenSql = "select * from acabado where id = :idmodelo order by nombre";
+    $idmodelo = $args['idmodelo'];
     $statement = $conn->prepare($ordenSql);
+    $statement->bindParam(':idmodelo', $idmodelo);
     $statement->execute();
     $salida = $statement->fetchAll(PDO::FETCH_ASSOC);
     $statement = null;
-    $payload = json_encode(["modelos"=>$salida],JSON_UNESCAPED_UNICODE);
+    $payload = json_encode(["acabados"=>$salida],JSON_UNESCAPED_UNICODE);
 
         $response->getBody()->write($payload);
         return $response
